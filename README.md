@@ -2,7 +2,7 @@
 [FMan](https://www.fman.io) Plugin to use your last used directories from FMan within the windows save dialog
 
 # Install
-install the plugin by unzipping the release to 
+install the plugin by copying the release to 
 > %AppData%\Roaming\fman\Plugins\User
 
 Reload Plugins from within fman.io
