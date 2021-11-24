@@ -13,7 +13,7 @@ From now on the plugin will remember the last 9 directories you used in fman.
 
 Now whenever a windows save as / open dialog is active you can press *F9* to show the list of the last directories
 
-![plot](./media/screenshot_01.png)
+![plot](./media/screenshot_01.PNG)
 
 Press a digit from 1-9 on your keyboard to set the save as / open dialog to that path.
 Or press any other key to cancel.
