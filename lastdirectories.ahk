@@ -2,7 +2,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance force
 #Persistent ;Script nicht beenden nach der Auto-Execution-Section
-;@Ahk2Exe-ExeName %A_ScriptDir%\bin\FmanSaveAsDialogExtension\SaveAsDialogExtension\lastdirectories.exe
+;@Ahk2Exe-ExeName %A_ScriptDir%\saveasdialogextension\lastdirectories.exe
 
 SetWorkingDir %A_ScriptDir%
 SetTitleMatchMode, 2
