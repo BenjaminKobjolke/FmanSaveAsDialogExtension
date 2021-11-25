@@ -7,6 +7,10 @@ install the plugin by copying the release to
 
 Reload Plugins from within fman.io
 
+Or just use the "install plugin" functin from within fman and search for FmanSaveAsDialogExtension.
+
+
+# Usage
 When the plugin starts the *lastdirectories.exe* will be automatically started.
 You can see that it is running because it has a systray icon.
 From now on the plugin will remember the last 9 directories you used in fman.
