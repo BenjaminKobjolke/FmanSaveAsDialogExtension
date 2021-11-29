@@ -7,7 +7,7 @@ install the plugin by copying the release to
 
 Reload Plugins from within fman.io
 
-Or just use the "install plugin" functin from within fman and search for FmanSaveAsDialogExtension.
+Or just use the "install plugin" function from within fman and search for FmanSaveAsDialogExtension.
 
 
 # Usage
