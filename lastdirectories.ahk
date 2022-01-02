@@ -2,11 +2,9 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance force
 #Persistent ;Script nicht beenden nach der Auto-Execution-Section
-;@Ahk2Exe-ExeName %A_ScriptDir%\saveasdialogextension\lastdirectories.exe
 
 SetWorkingDir %A_ScriptDir%
 SetTitleMatchMode, 2
-
 
 Menu, tray, NoStandard
 Menu, tray, add  ; Creates a separator line.
@@ -14,6 +12,16 @@ Menu, tray, add, Reload
 Menu, tray, add, Exit
 
 #Include JSON.ahk
+
+
+parameter = %1%
+
+match := InStr(parameter, "exit")
+
+if(match > 0) {
+	ExitApp
+}
+return
 
 F9::
 	ActiveHWND  := WinActive("A")

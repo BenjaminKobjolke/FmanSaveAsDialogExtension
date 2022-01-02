@@ -12,7 +12,9 @@ SETTINGS_FILENAME = "Lastdirectories.json"
 # Using register() as a decorator 
 @atexit.register 
 def goodbye(): 
-    os.system("taskkill /F /im lastdirectories.exe")
+	file_path = os.path.dirname(__file__)
+	exe_path = file_path + "\\lastdirectories.exe"
+	subprocess.Popen(f'"{exe_path}" exit')
 
 # static class
 class Globals():
