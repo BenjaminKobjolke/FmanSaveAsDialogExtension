@@ -37,9 +37,14 @@ class OnDirectoryChanged(DirectoryPaneListener):
 			return
 
 		mylist = load_json(SETTINGS_FILENAME,  default=[])
-		mylist.append(as_human_readable(current_path))	
+		mylist.append(as_human_readable(current_path))			
 		# trim myList to max 9 items
 		if len(mylist) > 9:
 			mylist = mylist[len(mylist)-9:]				
 					
+		mylist = CleanList(mylist)					
 		save_json(SETTINGS_FILENAME, mylist)
+
+def CleanList(history_list):
+    newList = list(dict.fromkeys(history_list))
+    return(newList)
