@@ -1,3 +1,5 @@
+;@Ahk2Exe-SetMainIcon icon.ico
+
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 #SingleInstance force
@@ -7,6 +9,9 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%
 SetTitleMatchMode, 2
 
+if (!a_iscompiled) {
+	Menu, tray, icon, icon.ico,0,1
+}
 
 Menu, tray, NoStandard
 Menu, tray, add  ; Creates a separator line.
@@ -14,6 +19,16 @@ Menu, tray, add, Reload
 Menu, tray, add, Exit
 
 #Include JSON.ahk
+
+SetTimer, CheckForFman, 10000
+
+return
+
+CheckForFman:
+	Process, Exist, fman.exe
+    if !ErrorLevel
+	 ExitApp
+return
 
 F9::
 	ActiveHWND  := WinActive("A")

@@ -4,40 +4,37 @@ import subprocess
 from subprocess import Popen
 import os.path
 import os
-
+import win32api
 import atexit
 
 SETTINGS_FILENAME = "Lastdirectories.json"
 
-# Using register() as a decorator 
-@atexit.register 
-def goodbye(): 
-    os.system("taskkill /F /im lastdirectories.exe")
 
 # static class
 class Globals():
-	# bool 
-	first_run_done = False
+    # bool
+    first_run_done = False
+
 
 class OnDirectoryChanged(DirectoryPaneListener):
-	
-	def on_path_changed(self):
-		if Globals.first_run_done != True:
-			Globals.first_run_done = True			
-			file_path = os.path.dirname(__file__)
-			exe_path = file_path + "\\lastdirectories.exe"
-			subprocess.Popen(f'"{exe_path}"')			
-			
-		current_path = self.pane.get_path()
 
-		# happens on start
-		if current_path == "null://":
-			return
+    def on_path_changed(self):
+        if Globals.first_run_done != True:
+            Globals.first_run_done = True
+            file_path = os.path.dirname(__file__)
+            exe_path = file_path + "\\lastdirectories.exe"
+            subprocess.Popen(f'"{exe_path}"')
 
-		mylist = load_json(SETTINGS_FILENAME,  default=[])
-		mylist.append(as_human_readable(current_path))	
-		# trim myList to max 9 items
-		if len(mylist) > 9:
-			mylist = mylist[len(mylist)-9:]				
-					
-		save_json(SETTINGS_FILENAME, mylist)
+        current_path = self.pane.get_path()
+
+        # happens on start
+        if current_path == "null://":
+            return
+
+        mylist = load_json(SETTINGS_FILENAME,  default=[])
+        mylist.append(as_human_readable(current_path))
+        # trim myList to max 9 items
+        if len(mylist) > 9:
+            mylist = mylist[len(mylist)-9:]
+
+        save_json(SETTINGS_FILENAME, mylist)
