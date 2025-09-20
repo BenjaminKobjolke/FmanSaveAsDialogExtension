@@ -7,7 +7,7 @@ import os
 import win32api
 import atexit
 
-SETTINGS_FILENAME = "Lastdirectories.json"
+SETTINGS_FILENAME = "SaveAsDialog_Lastdirectories.json"
 
 
 # static class

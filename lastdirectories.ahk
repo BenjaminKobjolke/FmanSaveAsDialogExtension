@@ -135,8 +135,8 @@ Action:
 				inQuotes := false
 				; Process the completed path
 				if (currentPath != "") {
-					; Skip FTP paths
-					if (InStr(currentPath, "ftp:/") != 1) {
+					; Skip FTP paths and drives: paths
+					if (InStr(currentPath, "ftp:/") != 1 && InStr(currentPath, "drives:") != 1) {
 						; Normalize path for comparison (remove trailing slashes)
 						normalizedPath := RTrim(currentPath, "\/")
 						if (!seenPaths.HasKey(normalizedPath)) {
@@ -201,9 +201,11 @@ Action:
 		}
 	}
 
-	; Position GUI near mouse
-	MouseGetPos, mouseX, mouseY
-	Gui, DirectoryList:Show, x%mouseX% y%mouseY% NoActivate
+	; Position GUI centered in the save dialog
+	WinGetPos, winX, winY, winW, winH, ahk_id %ActiveHWND%
+	guiX := winX + (winW - 486) / 2  ; 486 = 450 + 2*18 margin
+	guiY := winY + (winH - 250) / 2  ; Approximate GUI height
+	Gui, DirectoryList:Show, x%guiX% y%guiY% NoActivate
 
 	; Wait for input
 	Input, inputVar, L1 T5, {Escape}
