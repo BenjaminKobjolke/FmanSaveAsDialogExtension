@@ -19,6 +19,7 @@ Now whenever a windows save as / open dialog is active you can press *F9* to sho
 
 ![plot](./media/screenshot_01.jpg)
 
+
 Press a digit from 1-9 on your keyboard to set the save as / open dialog to that path.
 Or press any other key to cancel.
 
