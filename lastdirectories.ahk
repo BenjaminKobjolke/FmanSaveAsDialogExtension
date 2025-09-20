@@ -18,7 +18,7 @@ Menu, tray, add  ; Creates a separator line.
 Menu, tray, add, Reload  
 Menu, tray, add, Exit
 
-#Include JSON.ahk
+; #Include JSON.ahk  ; Not needed - using manual parsing
 
 ActiveHWND = 
 SetTimer, CheckForFman, 10000
@@ -87,27 +87,93 @@ PastePath(winID, targetDir) {
 
 
 Action:
+	; Clean up any existing state
+	Gui, DirectoryList:Destroy
+	dataArray := []
+	tempArray := []
+	json := ""  ; Clear json variable
+
 	path = %A_AppData%\fman\plugins\User\Settings\SaveAsDialog_Lastdirectories (Windows).json
 	FileRead, jsonString, %path%
-	json := JSON.Load(jsonString)
 
-	tempArray := []
-	seenPaths := {}
-	for each, item in json {
-		; Skip FTP paths
-		if (InStr(item, "ftp:/") = 1)
-			continue
-
-		; Normalize path for comparison (remove trailing slashes)
-		normalizedPath := RTrim(item, "\/")
-		if (!seenPaths.HasKey(normalizedPath)) {
-			tempArray.push(item)
-			seenPaths[normalizedPath] := true
-		}
+	; Check if file read succeeded
+	if (ErrorLevel) {
+		MsgBox, Failed to read file: %path%
+		return
 	}
 
-	; Create a fresh dataArray from reversed tempArray
-	dataArray := ReverseArray(tempArray)
+	; Manual JSON parsing for simple array format: ["path1", "path2", "path3"]
+	; Clean the JSON string
+	StringReplace, jsonString, jsonString, `r, , All
+	StringReplace, jsonString, jsonString, `n, , All
+	jsonString := Trim(jsonString)
+
+	; Parse manually - remove brackets and split by commas
+	jsonLen := StrLen(jsonString)
+	if (SubStr(jsonString, 1, 1) = "[" && SubStr(jsonString, jsonLen, 1) = "]") {
+		; Remove the surrounding brackets
+		jsonContent := SubStr(jsonString, 2, StrLen(jsonString) - 2)
+
+		; Split by comma and parse each quoted string
+		dataArray := []
+		seenPaths := {}
+
+		; Simple state machine to parse quoted strings
+		currentPath := ""
+		inQuotes := false
+		i := 1
+
+		while (i <= StrLen(jsonContent)) {
+			char := SubStr(jsonContent, i, 1)
+
+			if (char = """" && !inQuotes) {
+				; Start of quoted string
+				inQuotes := true
+				currentPath := ""
+			} else if (char = """" && inQuotes) {
+				; End of quoted string
+				inQuotes := false
+				; Process the completed path
+				if (currentPath != "") {
+					; Skip FTP paths
+					if (InStr(currentPath, "ftp:/") != 1) {
+						; Normalize path for comparison (remove trailing slashes)
+						normalizedPath := RTrim(currentPath, "\/")
+						if (!seenPaths.HasKey(normalizedPath)) {
+							dataArray.Push(currentPath)
+							seenPaths[normalizedPath] := true
+						}
+					}
+				}
+				currentPath := ""
+			} else if (inQuotes) {
+				; Inside quotes, add character (handle escape sequences)
+				if (char = "\") {
+					; Handle escape sequences
+					nextChar := SubStr(jsonContent, i + 1, 1)
+					if (nextChar = "\") {
+						currentPath .= "\"
+						i++ ; Skip next character
+					} else if (nextChar = """") {
+						currentPath .= """"
+						i++ ; Skip next character
+					} else {
+						currentPath .= char
+					}
+				} else {
+					currentPath .= char
+				}
+			}
+			i++
+		}
+
+		; Reverse the array for display (most recent first)
+		dataArray := ReverseArray(dataArray)
+
+	} else {
+		MsgBox, Invalid JSON format - not an array
+		return
+	}
 
 	; Create minimalistic GUI
 	Gui, DirectoryList:New, +AlwaysOnTop -Caption +ToolWindow +Border
@@ -147,13 +213,11 @@ Action:
 
 	; Check if cancelled
 	if (ErrorLevel = "EndKey:Escape") {
-		reload
 		return
 	}
 
 	; Process selection
 	if (inputVar < 1 || inputVar > 9 || !dataArray[inputVar]) {
-		reload
 		return
 	}
 
@@ -179,7 +243,6 @@ Action:
 	Sleep, 100
 	ControlFocus, Edit1, ahk_id %ActiveHWND%
 	Sleep, 100
-	reload
 return
 
 ReverseArray(oArray)
