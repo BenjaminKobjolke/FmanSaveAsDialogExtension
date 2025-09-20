@@ -234,13 +234,10 @@ Action:
 	}  else {
 		if !WinActive("ahk_id " ActiveHWND)  ; re-assert focus if needed
 			WinActivate, ahk_id %ActiveHWND%
-		ControlFocus, Edit2, ahk_id %ActiveHWND%
-		ControlSetText, Edit2, %targetDir%, ahk_id %ActiveHWND%
-		;ControlSend,  Edit2, {Enter}, ahk_id %ActiveHWND%
-		
-		;ControlSetText, Edit2,%targetDir%, A
-		;Sleep, 10
-		;ControlSend Edit2, {Enter}
+		ControlFocus, Edit1, ahk_id %ActiveHWND%
+		ControlSetText, Edit1, %targetDir%, ahk_id %ActiveHWND%
+		Sleep, 50
+		ControlSend,  Edit1, {Enter}, ahk_id %ActiveHWND%
 	}
 	Sleep, 100
 	ControlFocus, Edit1, ahk_id %ActiveHWND%
